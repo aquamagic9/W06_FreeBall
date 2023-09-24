@@ -5,14 +5,15 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     Rigidbody _rigidbody;
-    [SerializeField] Vector3 Direction;
-    [SerializeField] Vector3 TorqueDirection;
-    [SerializeField] float Force;
-    [SerializeField] float TorqueForce;
+    [SerializeField] public Vector3 Direction;
+    [SerializeField] public Vector3 TorqueDirection;
+    [SerializeField] public float Force;
+    [SerializeField] public float TorqueForce;
     [SerializeField] float Rho;
     [SerializeField] float Cd = 0.25f;
     [SerializeField] float Cl = 0.25f;
     [SerializeField] float Spin;
+    public Vector3 ResetPosition;
 
 
     float _drag;
@@ -23,16 +24,18 @@ public class Ball : MonoBehaviour
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _rigidbody.maxAngularVelocity = Mathf.Infinity;
         _radius = GetComponent<SphereCollider>().bounds.size.x / 2f;
         _radius *= 0.1f;
         _crossSectionalArea = _radius * _radius * Mathf.PI;
+        ResetPosition = new Vector3(0.0f, 2.0f, 0.0f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        DebugFunc();
-        ResetPosition();
+        //DebugFunc();
+        GetKey();
     }
     private void FixedUpdate()
     {
@@ -41,6 +44,7 @@ public class Ball : MonoBehaviour
     public void ShootBall()
     {
         _rigidbody.AddForce(Direction.normalized * Force, ForceMode.Impulse);
+        _rigidbody.AddTorque(TorqueDirection.normalized * TorqueForce, ForceMode.Impulse);
     }
     private void CalculateForce()
     {
@@ -59,19 +63,18 @@ public class Ball : MonoBehaviour
         Debug.DrawRay(this.transform.position, _liftVec.normalized * 10f, Color.blue);
     }
 
-    private void ResetPosition()
+    private void GetKey()
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            this.transform.position = Vector3.zero;
+            Debug.Log("Rkey");
+            this.transform.position = ResetPosition;
             _rigidbody.velocity = Vector3.zero;
             _rigidbody.angularVelocity = Vector3.zero;        
         }
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            Vector3 force = new Vector3(0, 0, 1);
-            Vector3 torque = Vector3.Cross(Vector3.right, force);
-            _rigidbody.AddTorque(TorqueDirection.normalized * TorqueForce, ForceMode.Impulse);
+            ShootBall();
         }
     }
 }
