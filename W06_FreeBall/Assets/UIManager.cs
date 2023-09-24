@@ -86,11 +86,11 @@ public class UIManager : MonoBehaviour
     }
     public void SetSpinLeft()
     {
-        _ball.TorqueDirection = new Vector3(0.0f, -1f, 0.0f);
+        _ball.TorqueDirection = new Vector3(0.0f, 1f, 0.0f);
     }
     public void SetSpinRight()
     {
-        _ball.TorqueDirection = new Vector3(0.0f, 1f, 0.0f);
+        _ball.TorqueDirection = new Vector3(0.0f, -1f, 0.0f);
     }
     public void SetSpinLeftBottom()
     {
